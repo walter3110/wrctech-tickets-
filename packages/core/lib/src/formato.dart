@@ -11,3 +11,12 @@ String fechaCorta(DateTime d) {
   if (diferencia == 1) return 'Ayer $hora';
   return '${_dos(d.day)}/${_dos(d.month)} $hora';
 }
+
+/// "$ 45.000" o "$ 45.000,50".
+String plata(double monto) {
+  final entero = monto.truncate();
+  final centavos = ((monto - entero) * 100).round();
+  final miles = entero.toString().replaceAllMapped(
+      RegExp(r'\B(?=(\d{3})+(?!\d))'), (_) => '.');
+  return centavos == 0 ? '\$ $miles' : '\$ $miles,${_dos(centavos)}';
+}

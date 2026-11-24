@@ -5,7 +5,7 @@ Sistema de tickets de soporte de Sistemas para la farmacia.
 | App | Celular | Estado |
 |---|---|---|
 | WRCtech Soporte | Farmacia | Fase 1 |
-| WRCtech Tickets | Sistemas | Próximamente |
+| WRCtech Tickets | Sistemas | Fase 1 |
 | WRCtech Supervisión | Farmacéutico | Fase 2 |
 
 ## Estructura

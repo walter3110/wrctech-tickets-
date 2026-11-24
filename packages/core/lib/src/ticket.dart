@@ -43,7 +43,11 @@ class Ticket {
   final String urgencia;
   final String estado;
   final String? notaResolucion;
+  final String? materiales;
+  final String? presupuestoDetalle;
+  final double? presupuestoMonto;
   final DateTime creadoEn;
+  final DateTime? tomadoEn;
   final DateTime? resueltoEn;
 
   Ticket.desdeMapa(Map<String, dynamic> m)
@@ -56,13 +60,27 @@ class Ticket {
         urgencia = m['urgencia'] as String,
         estado = m['estado'] as String,
         notaResolucion = m['nota_resolucion'] as String?,
+        materiales = m['materiales'] as String?,
+        presupuestoDetalle = m['presupuesto_detalle'] as String?,
+        presupuestoMonto = (m['presupuesto_monto'] as num?)?.toDouble(),
         creadoEn = DateTime.parse(m['creado_en'] as String).toLocal(),
-        resueltoEn = m['resuelto_en'] == null
-            ? null
-            : DateTime.parse(m['resuelto_en'] as String).toLocal();
+        tomadoEn = _fecha(m['tomado_en']),
+        resueltoEn = _fecha(m['resuelto_en']);
+
+  static DateTime? _fecha(Object? v) =>
+      v == null ? null : DateTime.parse(v as String).toLocal();
 
   String get numeroTexto => '#${numero.toString().padLeft(4, '0')}';
   bool get esUrgente => urgencia == 'urgente';
+  bool get esDeSistemas => origen == 'sistemas';
+
+  /// Tickets que todavía requieren algo de Sistemas o del farmacéutico.
+  bool get estaAbierto => const {
+        'nuevo',
+        'en_proceso',
+        'a_presupuestar',
+        'presupuesto_aprobado',
+      }.contains(estado);
 }
 
 /// Etiqueta de color con el estado del ticket.

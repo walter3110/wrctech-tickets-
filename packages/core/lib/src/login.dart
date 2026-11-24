@@ -1,12 +1,24 @@
-import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../supa.dart';
 
-/// Configuración inicial del celular de la farmacia. La hace Sistemas una sola vez.
+/// Pantalla de ingreso. El usuario (email) es fijo por app; solo se pide la contraseña.
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final String titulo;
+  final String subtitulo;
+  final String email;
+  final String etiquetaClave;
+  final String textoBoton;
+  final IconData icono;
+  const LoginPage({
+    super.key,
+    required this.titulo,
+    required this.subtitulo,
+    required this.email,
+    this.etiquetaClave = 'Contraseña',
+    this.textoBoton = 'Ingresar',
+    this.icono = Icons.lock_outline,
+  });
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -25,8 +37,8 @@ class _LoginPageState extends State<LoginPage> {
       _error = null;
     });
     try {
-      await supabase.auth.signInWithPassword(
-        email: AppConfig.emailFarmacia,
+      await Supabase.instance.client.auth.signInWithPassword(
+        email: widget.email,
         password: _clave.text.trim(),
       );
     } on AuthException {
@@ -55,16 +67,16 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Icon(Icons.support_agent, size: 72, color: tema.colorScheme.primary),
+                Icon(widget.icono, size: 72, color: tema.colorScheme.primary),
                 const SizedBox(height: 12),
                 Text(
-                  'WRCtech Soporte',
+                  widget.titulo,
                   textAlign: TextAlign.center,
                   style: tema.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Configuración inicial del celular de la farmacia.\nSolo la realiza Sistemas.',
+                  widget.subtitulo,
                   textAlign: TextAlign.center,
                   style: tema.textTheme.bodyMedium,
                 ),
@@ -74,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                   obscureText: !_verClave,
                   onSubmitted: (_) => _entrar(),
                   decoration: InputDecoration(
-                    labelText: 'Contraseña de la farmacia',
+                    labelText: widget.etiquetaClave,
                     errorText: _error,
                     suffixIcon: IconButton(
                       icon: Icon(_verClave ? Icons.visibility_off : Icons.visibility),
@@ -88,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: _cargando
                       ? const SizedBox(
                           width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5))
-                      : const Text('Activar'),
+                      : Text(widget.textoBoton),
                 ),
               ],
             ),

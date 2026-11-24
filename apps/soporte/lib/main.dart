@@ -4,7 +4,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'pantallas/inicio.dart';
-import 'pantallas/login.dart';
 import 'supa.dart';
 
 Future<void> main() async {
@@ -43,7 +42,16 @@ class _Raiz extends StatelessWidget {
       stream: supabase.auth.onAuthStateChange,
       builder: (context, _) {
         final sesion = supabase.auth.currentSession;
-        return sesion == null ? const LoginPage() : const InicioPage();
+        return sesion == null
+            ? const LoginPage(
+                titulo: 'WRCtech Soporte',
+                subtitulo: 'Configuración inicial del celular de la farmacia.\nSolo la realiza Sistemas.',
+                email: AppConfig.emailFarmacia,
+                etiquetaClave: 'Contraseña de la farmacia',
+                textoBoton: 'Activar',
+                icono: Icons.support_agent,
+              )
+            : const InicioPage();
       },
     );
   }

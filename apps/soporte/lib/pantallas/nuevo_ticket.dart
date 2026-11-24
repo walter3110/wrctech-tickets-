@@ -1,20 +1,7 @@
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 
 import '../supa.dart';
-
-/// Terminal 1 es la madre (servidor) y no tiene impresora de tickets.
-/// Las terminales 2 a 7 tienen computadora e impresora de tickets.
-const _cantidadTerminales = 7;
-
-String _nombreTerminal(int n) => n == 1 ? 'Terminal 1 (madre)' : 'Terminal $n';
-
-const _otrosEquipos = [
-  'Internet / WiFi',
-  'Sistema de ventas',
-  'Lector de códigos',
-  'Teléfono',
-  'Otro',
-];
 
 class NuevoTicketPage extends StatefulWidget {
   const NuevoTicketPage({super.key});
@@ -28,41 +15,8 @@ class _NuevoTicketPageState extends State<NuevoTicketPage> {
   final _nombre = TextEditingController();
   final _equipo = TextEditingController();
   final _descripcion = TextEditingController();
-  final _focoEquipo = FocusNode();
   bool _urgente = false;
   bool _enviando = false;
-  int? _terminal; // terminal elegida
-  bool _impresora = false; // true = la impresora de tickets de esa terminal
-
-  void _ponerEquipo(String texto) {
-    _equipo.text = texto;
-    _equipo.selection = TextSelection.collapsed(offset: texto.length);
-  }
-
-  void _elegirTerminal(int n) {
-    setState(() {
-      _terminal = n;
-      _impresora = false;
-    });
-    _ponerEquipo(_nombreTerminal(n));
-  }
-
-  void _elegirParte(bool impresora) {
-    setState(() => _impresora = impresora);
-    final base = _nombreTerminal(_terminal!);
-    _ponerEquipo(impresora ? '$base - Impresora de tickets' : base);
-  }
-
-  void _elegirOtro(String e) {
-    setState(() => _terminal = null);
-    if (e == 'Otro') {
-      // Que escriban qué equipo es.
-      _equipo.clear();
-      _focoEquipo.requestFocus();
-    } else {
-      _ponerEquipo(e);
-    }
-  }
 
   Future<void> _enviar() async {
     if (!_form.currentState!.validate()) return;
@@ -124,7 +78,6 @@ class _NuevoTicketPageState extends State<NuevoTicketPage> {
     _nombre.dispose();
     _equipo.dispose();
     _descripcion.dispose();
-    _focoEquipo.dispose();
     super.dispose();
   }
 
@@ -151,64 +104,7 @@ class _NuevoTicketPageState extends State<NuevoTicketPage> {
                 validator: _obligatorio,
               ),
               const SizedBox(height: 20),
-              Text('¿Qué equipo tiene el problema?',
-                  style: Theme.of(context).textTheme.titleSmall),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 4,
-                children: [
-                  for (var n = 1; n <= _cantidadTerminales; n++)
-                    ChoiceChip(
-                      label: Text(n == 1 ? 'Terminal 1 (madre)' : 'Terminal $n'),
-                      selected: _terminal == n,
-                      onSelected: (_) => _elegirTerminal(n),
-                    ),
-                ],
-              ),
-              // Terminales 2 a 7: ¿la compu o la impresora de tickets?
-              if (_terminal != null && _terminal != 1) ...[
-                const SizedBox(height: 12),
-                Text('¿Qué parte de la Terminal $_terminal?',
-                    style: Theme.of(context).textTheme.titleSmall),
-                const SizedBox(height: 8),
-                SegmentedButton<bool>(
-                  segments: const [
-                    ButtonSegment(
-                        value: false, icon: Icon(Icons.computer), label: Text('Computadora')),
-                    ButtonSegment(
-                        value: true,
-                        icon: Icon(Icons.receipt_long),
-                        label: Text('Impresora de tickets')),
-                  ],
-                  showSelectedIcon: false,
-                  selected: {_impresora},
-                  onSelectionChanged: (v) => _elegirParte(v.first),
-                ),
-              ],
-              const SizedBox(height: 12),
-              Text('Otros equipos', style: Theme.of(context).textTheme.titleSmall),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 4,
-                children: [
-                  for (final e in _otrosEquipos)
-                    ActionChip(label: Text(e), onPressed: () => _elegirOtro(e)),
-                ],
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _equipo,
-                focusNode: _focoEquipo,
-                textCapitalization: TextCapitalization.sentences,
-                decoration: const InputDecoration(
-                  labelText: 'Equipo',
-                  hintText: 'Ej: Terminal 3',
-                  prefixIcon: Icon(Icons.computer),
-                ),
-                validator: _obligatorio,
-              ),
+              SelectorEquipo(controller: _equipo),
               const SizedBox(height: 20),
               TextFormField(
                 controller: _descripcion,
