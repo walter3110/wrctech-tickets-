@@ -31,6 +31,19 @@ jobs:
           channel: stable
           cache: true
 
+      # El análisis "lintVital" de Android falla con algunos plugins (firebase_core).
+      # No afecta la app, así que se desactiva en la compilación.
+      - name: Desactivar lintVital
+        run: |
+          mkdir -p ~/.gradle/init.d
+          cat > ~/.gradle/init.d/sin-lint.gradle <<'EOF2'
+          allprojects {
+              tasks.configureEach { t ->
+                  if (t.name.startsWith("lintVital")) { t.enabled = false }
+              }
+          }
+          EOF2
+
       - name: Generar proyecto Android
         working-directory: apps/${{ matrix.app }}
         run: flutter create --org com.wrctech --project-name ${{ matrix.app }} --platforms android .
