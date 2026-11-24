@@ -23,5 +23,11 @@ for nombre_permiso in ("INTERNET", "POST_NOTIFICATIONS"):
     if n != 1:
         sys.exit("No encontré la etiqueta <manifest>")
 
+# Canal de notificaciones por defecto (lo crea MainActivity.kt, si la app lo trae).
+meta = ('<meta-data android:name="com.google.firebase.messaging.default_notification_channel_id"'
+        ' android:value="tickets"/>')
+if "default_notification_channel_id" not in texto:
+    texto = texto.replace("</application>", f"    {meta}\n    </application>", 1)
+
 manifest.write_text(texto, encoding="utf-8")
 print(f"OK: {manifest} -> {nombre}")

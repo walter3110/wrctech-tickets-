@@ -95,7 +95,10 @@ async function avisar(roles: string[], titulo: string, cuerpo: string, ticketId:
             token,
             notification: { title: titulo, body: cuerpo },
             data: { ticket_id: ticketId },
-            android: { priority: "high", notification: { sound: "default" } },
+            android: {
+              priority: "high",
+              notification: { channel_id: "tickets", sound: "default" },
+            },
           },
         }),
       },
