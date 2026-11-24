@@ -24,6 +24,7 @@ class TecnicoApp extends StatelessWidget {
       title: 'WRCtech Tickets',
       debugShowCheckedModeBanner: false,
       theme: wrctechTema(),
+      scaffoldMessengerKey: mensajesGlobales,
       locale: const Locale('es', 'AR'),
       supportedLocales: const [Locale('es', 'AR'), Locale('es')],
       localizationsDelegates: GlobalMaterialLocalizations.delegates,

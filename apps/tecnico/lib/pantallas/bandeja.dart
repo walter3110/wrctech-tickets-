@@ -1,6 +1,7 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 
+import '../firebase_opciones.dart';
 import '../supa.dart';
 import 'detalle.dart';
 import 'nuevo_trabajo.dart';
@@ -26,6 +27,12 @@ class _BandejaPageState extends State<BandejaPage> {
       .stream(primaryKey: ['id'])
       .order('numero', ascending: false)
       .limit(300);
+
+  @override
+  void initState() {
+    super.initState();
+    activarNotificaciones(firebaseOpciones);
+  }
 
   Future<void> _salir() async {
     final ok = await showDialog<bool>(

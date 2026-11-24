@@ -15,8 +15,10 @@ texto, n = re.subn(r'android:label="[^"]*"', f'android:label="{nombre}"', texto,
 if n != 1:
     sys.exit("No encontré android:label en el manifest")
 
-permiso = '<uses-permission android:name="android.permission.INTERNET"/>'
-if "android.permission.INTERNET" not in texto:
+for nombre_permiso in ("INTERNET", "POST_NOTIFICATIONS"):
+    if f"android.permission.{nombre_permiso}" in texto:
+        continue
+    permiso = f'<uses-permission android:name="android.permission.{nombre_permiso}"/>'
     texto, n = re.subn(r"(<manifest[^>]*>)", r"\1\n    " + permiso, texto, count=1)
     if n != 1:
         sys.exit("No encontré la etiqueta <manifest>")

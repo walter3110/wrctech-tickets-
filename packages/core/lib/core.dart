@@ -4,3 +4,4 @@ export 'src/ticket.dart';
 export 'src/formato.dart';
 export 'src/selector_equipo.dart';
 export 'src/login.dart';
+export 'src/notificaciones.dart';
