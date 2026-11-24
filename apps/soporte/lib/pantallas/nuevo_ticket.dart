@@ -57,7 +57,7 @@ class _NuevoTicketPageState extends State<NuevoTicketPage> {
         barrierDismissible: false,
         builder: (c) => AlertDialog(
           icon: const Icon(Icons.check_circle, color: Colors.green, size: 56),
-          title: const Text('Pedido enviado'),
+          title: const Text('Ticket creado'),
           content: Text(
             'Tu número de ticket es\n\n#$numero\n\nSistemas ya lo tiene en su lista.',
             textAlign: TextAlign.center,
@@ -93,7 +93,7 @@ class _NuevoTicketPageState extends State<NuevoTicketPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Pedir ayuda a Sistemas')),
+      appBar: AppBar(title: const Text('Nuevo ticket')),
       body: SafeArea(
         child: Form(
           key: _form,
@@ -163,7 +163,7 @@ class _NuevoTicketPageState extends State<NuevoTicketPage> {
                     ? const SizedBox(
                         width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2.5))
                     : const Icon(Icons.send),
-                label: const Text('Enviar pedido'),
+                label: const Text('Crear ticket'),
               ),
             ],
           ),

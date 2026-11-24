@@ -56,7 +56,7 @@ class _InicioPageState extends State<InicioPage> {
           MaterialPageRoute(builder: (_) => const NuevoTicketPage()),
         ),
         icon: const Icon(Icons.add),
-        label: const Text('Pedir ayuda a Sistemas'),
+        label: const Text('Crear ticket'),
       ),
       body: StreamBuilder<List<Map<String, dynamic>>>(
         stream: _tickets,
@@ -74,7 +74,7 @@ class _InicioPageState extends State<InicioPage> {
           if (tickets.isEmpty) {
             return const _Mensaje(
               icono: Icons.check_circle_outline,
-              texto: 'Todavía no hay pedidos.\nSi algo no funciona, tocá "Pedir ayuda a Sistemas".',
+              texto: 'Todavía no hay tickets.\nSi algo no funciona, tocá "Crear ticket".',
             );
           }
           return ListView.separated(
