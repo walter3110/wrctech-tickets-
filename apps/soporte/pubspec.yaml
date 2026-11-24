@@ -1,0 +1,30 @@
+name: soporte
+description: WRCtech Soporte - pedidos de ayuda a Sistemas desde la farmacia.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  supabase_flutter: ^2.8.0
+  core:
+    path: ../../packages/core
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.14.1
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icono.png"
+  adaptive_icon_background: "#0F766E"
+  adaptive_icon_foreground: "assets/icono_frente.png"
+  min_sdk_android: 21
