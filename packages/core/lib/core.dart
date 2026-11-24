@@ -6,3 +6,4 @@ export 'src/selector_equipo.dart';
 export 'src/login.dart';
 export 'src/notificaciones.dart';
 export 'src/tarjetas.dart';
+export 'src/en_vivo.dart';

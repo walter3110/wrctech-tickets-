@@ -13,7 +13,7 @@ class DetallePage extends StatefulWidget {
 }
 
 class _DetallePageState extends State<DetallePage> {
-  late final Stream<List<Map<String, dynamic>>> _ticket =
+  Stream<List<Map<String, dynamic>>> _ticket() =>
       supabase.from('tickets').stream(primaryKey: ['id']).eq('id', widget.ticketId);
   bool _guardando = false;
 
@@ -64,15 +64,15 @@ class _DetallePageState extends State<DetallePage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Map<String, dynamic>>>(
-      stream: _ticket,
+    return EnVivo(
+      crear: _ticket,
       builder: (context, snap) {
         if (!snap.hasData || snap.data!.isEmpty) {
           return Scaffold(
             appBar: AppBar(),
             body: Center(
               child: snap.hasError
-                  ? const Text('Sin conexión.')
+                  ? const Text('Reconectando…')
                   : const CircularProgressIndicator(),
             ),
           );

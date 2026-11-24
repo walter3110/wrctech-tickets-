@@ -11,7 +11,9 @@ bool _escuchando = false;
 /// Pide permiso de notificaciones y registra este celular en la tabla
 /// `dispositivos`, para que la función `notificar` de Supabase le mande avisos.
 /// Llamar después de iniciar sesión. Si algo falla, la app sigue funcionando.
-Future<void> activarNotificaciones(FirebaseOptions opciones) async {
+Future<void> activarNotificaciones(FirebaseOptions? opciones) async {
+  // Sin datos de Firebase (app todavía no registrada): la app funciona sin avisos.
+  if (opciones == null) return;
   try {
     if (Firebase.apps.isEmpty) {
       await Firebase.initializeApp(options: opciones);

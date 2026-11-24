@@ -22,7 +22,8 @@ class BandejaPage extends StatefulWidget {
 }
 
 class _BandejaPageState extends State<BandejaPage> {
-  late final Stream<List<Map<String, dynamic>>> _tickets = supabase
+  Stream<List<Map<String, dynamic>>> _tickets() =>
+      supabase
       .from('tickets')
       .stream(primaryKey: ['id'])
       .order('numero', ascending: false)
@@ -50,8 +51,8 @@ class _BandejaPageState extends State<BandejaPage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Map<String, dynamic>>>(
-      stream: _tickets,
+    return EnVivo(
+      crear: _tickets,
       builder: (context, snap) {
         final todos = snap.data?.map(Ticket.desdeMapa).toList() ?? <Ticket>[];
 
@@ -66,7 +67,7 @@ class _BandejaPageState extends State<BandejaPage> {
 
         Widget cuerpo(List<Ticket> lista, String vacio) {
           if (snap.hasError) {
-            return const AvisoVacio(Icons.wifi_off, 'Sin conexión. Reintentando…');
+            return const AvisoVacio(Icons.wifi_off, 'Reconectando…');
           }
           if (!snap.hasData) return const Center(child: CircularProgressIndicator());
           if (lista.isEmpty) return AvisoVacio(Icons.inbox_outlined, vacio);

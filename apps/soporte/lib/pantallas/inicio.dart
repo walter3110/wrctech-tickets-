@@ -15,7 +15,8 @@ class InicioPage extends StatefulWidget {
 
 class _InicioPageState extends State<InicioPage> {
   // Se actualiza sola cuando Sistemas cambia el estado de un ticket.
-  late final Stream<List<Map<String, dynamic>>> _tickets = supabase
+  Stream<List<Map<String, dynamic>>> _tickets() =>
+      supabase
       .from('tickets')
       .stream(primaryKey: ['id'])
       .order('numero', ascending: false)
@@ -66,13 +67,13 @@ class _InicioPageState extends State<InicioPage> {
         icon: const Icon(Icons.add),
         label: const Text('Crear ticket'),
       ),
-      body: StreamBuilder<List<Map<String, dynamic>>>(
-        stream: _tickets,
+      body: EnVivo(
+      crear: _tickets,
         builder: (context, snap) {
           if (snap.hasError) {
             return const _Mensaje(
               icono: Icons.wifi_off,
-              texto: 'Sin conexión. Revisá el WiFi o los datos.',
+              texto: 'Reconectando… Si sigue así, revisá el WiFi o los datos.',
             );
           }
           if (!snap.hasData) {

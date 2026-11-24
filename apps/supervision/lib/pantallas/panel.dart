@@ -14,7 +14,8 @@ class PanelPage extends StatefulWidget {
 }
 
 class _PanelPageState extends State<PanelPage> {
-  late final Stream<List<Map<String, dynamic>>> _tickets = supabase
+  Stream<List<Map<String, dynamic>>> _tickets() =>
+      supabase
       .from('tickets')
       .stream(primaryKey: ['id'])
       .order('numero', ascending: false)
@@ -42,8 +43,8 @@ class _PanelPageState extends State<PanelPage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Map<String, dynamic>>>(
-      stream: _tickets,
+    return EnVivo(
+      crear: _tickets,
       builder: (context, snap) {
         final todos = snap.data?.map(Ticket.desdeMapa).toList() ?? <Ticket>[];
         final paraAprobar = todos.where((t) => t.estado == 'a_presupuestar').toList();
@@ -53,7 +54,7 @@ class _PanelPageState extends State<PanelPage> {
 
         Widget lista(List<Ticket> tickets, String vacio) {
           if (snap.hasError) {
-            return const AvisoVacio(Icons.wifi_off, 'Sin conexión. Reintentando…');
+            return const AvisoVacio(Icons.wifi_off, 'Reconectando…');
           }
           if (!snap.hasData) return const Center(child: CircularProgressIndicator());
           if (tickets.isEmpty) return AvisoVacio(Icons.inbox_outlined, vacio);
