@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../supa.dart';
 
 const _equiposRapidos = [
-  'Computadora',
+  for (var i = 1; i <= 7; i++) 'Terminal $i',
   'Impresora',
   'Internet / WiFi',
   'Sistema de ventas',
@@ -29,11 +29,13 @@ class _NuevoTicketPageState extends State<NuevoTicketPage> {
   bool _enviando = false;
 
   void _elegirEquipo(String e) {
-    // "Computadora " queda con espacio para que agreguen el número (ej. "Computadora 3").
-    final texto = e == 'Computadora' ? 'Computadora ' : e;
-    _equipo.text = texto;
-    _equipo.selection = TextSelection.collapsed(offset: texto.length);
-    _focoEquipo.requestFocus();
+    _equipo.text = e;
+    _equipo.selection = TextSelection.collapsed(offset: e.length);
+    // "Otro": que escriban qué equipo es.
+    if (e == 'Otro') {
+      _equipo.clear();
+      _focoEquipo.requestFocus();
+    }
   }
 
   Future<void> _enviar() async {
@@ -141,7 +143,7 @@ class _NuevoTicketPageState extends State<NuevoTicketPage> {
                 textCapitalization: TextCapitalization.sentences,
                 decoration: const InputDecoration(
                   labelText: 'Equipo',
-                  hintText: 'Ej: Computadora 3',
+                  hintText: 'Ej: Terminal 3',
                   prefixIcon: Icon(Icons.computer),
                 ),
                 validator: _obligatorio,
