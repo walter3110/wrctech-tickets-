@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../supa.dart';
 
-const _equiposRapidos = [
+final _equiposRapidos = [
   for (var i = 1; i <= 7; i++) 'Terminal $i',
   'Impresora',
   'Internet / WiFi',
