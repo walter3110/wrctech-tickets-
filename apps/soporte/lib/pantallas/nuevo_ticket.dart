@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../supa.dart';
 
-final _equiposRapidos = [
-  for (var i = 1; i <= 7; i++) 'Terminal $i',
-  'Impresora',
+/// Terminal 1 es la madre (servidor) y no tiene impresora de tickets.
+/// Las terminales 2 a 7 tienen computadora e impresora de tickets.
+const _cantidadTerminales = 7;
+
+String _nombreTerminal(int n) => n == 1 ? 'Terminal 1 (madre)' : 'Terminal $n';
+
+const _otrosEquipos = [
   'Internet / WiFi',
   'Sistema de ventas',
   'Lector de códigos',
@@ -27,14 +31,36 @@ class _NuevoTicketPageState extends State<NuevoTicketPage> {
   final _focoEquipo = FocusNode();
   bool _urgente = false;
   bool _enviando = false;
+  int? _terminal; // terminal elegida
+  bool _impresora = false; // true = la impresora de tickets de esa terminal
 
-  void _elegirEquipo(String e) {
-    _equipo.text = e;
-    _equipo.selection = TextSelection.collapsed(offset: e.length);
-    // "Otro": que escriban qué equipo es.
+  void _ponerEquipo(String texto) {
+    _equipo.text = texto;
+    _equipo.selection = TextSelection.collapsed(offset: texto.length);
+  }
+
+  void _elegirTerminal(int n) {
+    setState(() {
+      _terminal = n;
+      _impresora = false;
+    });
+    _ponerEquipo(_nombreTerminal(n));
+  }
+
+  void _elegirParte(bool impresora) {
+    setState(() => _impresora = impresora);
+    final base = _nombreTerminal(_terminal!);
+    _ponerEquipo(impresora ? '$base - Impresora de tickets' : base);
+  }
+
+  void _elegirOtro(String e) {
+    setState(() => _terminal = null);
     if (e == 'Otro') {
+      // Que escriban qué equipo es.
       _equipo.clear();
       _focoEquipo.requestFocus();
+    } else {
+      _ponerEquipo(e);
     }
   }
 
@@ -132,8 +158,43 @@ class _NuevoTicketPageState extends State<NuevoTicketPage> {
                 spacing: 8,
                 runSpacing: 4,
                 children: [
-                  for (final e in _equiposRapidos)
-                    ActionChip(label: Text(e), onPressed: () => _elegirEquipo(e)),
+                  for (var n = 1; n <= _cantidadTerminales; n++)
+                    ChoiceChip(
+                      label: Text(n == 1 ? 'Terminal 1 (madre)' : 'Terminal $n'),
+                      selected: _terminal == n,
+                      onSelected: (_) => _elegirTerminal(n),
+                    ),
+                ],
+              ),
+              // Terminales 2 a 7: ¿la compu o la impresora de tickets?
+              if (_terminal != null && _terminal != 1) ...[
+                const SizedBox(height: 12),
+                Text('¿Qué parte de la Terminal $_terminal?',
+                    style: Theme.of(context).textTheme.titleSmall),
+                const SizedBox(height: 8),
+                SegmentedButton<bool>(
+                  segments: const [
+                    ButtonSegment(
+                        value: false, icon: Icon(Icons.computer), label: Text('Computadora')),
+                    ButtonSegment(
+                        value: true,
+                        icon: Icon(Icons.receipt_long),
+                        label: Text('Impresora de tickets')),
+                  ],
+                  showSelectedIcon: false,
+                  selected: {_impresora},
+                  onSelectionChanged: (v) => _elegirParte(v.first),
+                ),
+              ],
+              const SizedBox(height: 12),
+              Text('Otros equipos', style: Theme.of(context).textTheme.titleSmall),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: [
+                  for (final e in _otrosEquipos)
+                    ActionChip(label: Text(e), onPressed: () => _elegirOtro(e)),
                 ],
               ),
               const SizedBox(height: 12),
