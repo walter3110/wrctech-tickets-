@@ -1,6 +1,7 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 
+import '../firebase_opciones.dart';
 import '../supa.dart';
 import 'nuevo_ticket.dart';
 
@@ -19,6 +20,13 @@ class _InicioPageState extends State<InicioPage> {
       .stream(primaryKey: ['id'])
       .order('numero', ascending: false)
       .limit(50);
+
+  @override
+  void initState() {
+    super.initState();
+    // Aviso cuando Sistemas resuelve un ticket de la farmacia.
+    activarNotificaciones(firebaseOpciones);
+  }
 
   Future<void> _cerrarSesion() async {
     final ok = await showDialog<bool>(

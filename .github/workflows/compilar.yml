@@ -18,6 +18,8 @@ jobs:
             nombre: "WRCtech Soporte"
           - app: tecnico
             nombre: "WRCtech Tickets"
+          - app: supervision
+            nombre: "WRCtech Supervisión"
     steps:
       - uses: actions/checkout@v4
 
