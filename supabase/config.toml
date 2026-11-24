@@ -1,0 +1,4 @@
+project_id = "wrctech-tickets"
+
+[functions.notificar]
+verify_jwt = false
