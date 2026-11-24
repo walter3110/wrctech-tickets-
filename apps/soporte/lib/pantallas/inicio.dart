@@ -149,7 +149,7 @@ class _TarjetaTicket extends StatelessWidget {
             const SizedBox(height: 16),
             _Dato('Equipo', t.equipo),
             _Dato('Problema', t.descripcion),
-            _Dato('Pedido por', '${t.empleado} · ${fechaCorta(t.creadoEn)}'),
+            _Dato('Creado por', '${t.empleado} · ${fechaCorta(t.creadoEn)}'),
             if (t.resueltoEn != null) _Dato('Resuelto', fechaCorta(t.resueltoEn!)),
             if (t.notaResolucion != null && t.notaResolucion!.isNotEmpty)
               _Dato('Qué se hizo', t.notaResolucion!),
