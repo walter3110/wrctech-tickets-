@@ -58,10 +58,23 @@ class _NuevoTicketPageState extends State<NuevoTicketPage> {
         builder: (c) => AlertDialog(
           icon: const Icon(Icons.check_circle, color: Colors.green, size: 56),
           title: const Text('Ticket creado'),
-          content: Text(
-            'Tu número de ticket es\n\n#$numero\n\nSistemas ya lo tiene en su lista.',
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 16),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Tu número de ticket es', style: TextStyle(fontSize: 16)),
+              const SizedBox(height: 8),
+              Text(
+                '#$numero',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(c).colorScheme.primary,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text('Sistemas ya lo tiene en su lista.',
+                  textAlign: TextAlign.center, style: TextStyle(fontSize: 16)),
+            ],
           ),
           actions: [
             FilledButton(onPressed: () => Navigator.pop(c), child: const Text('Listo')),
