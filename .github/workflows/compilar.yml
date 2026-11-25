@@ -46,6 +46,21 @@ jobs:
           }
           EOF2
 
+      # Siempre la misma firma: así las apps nuevas se instalan encima de las viejas.
+      - name: Firma fija
+        env:
+          FIRMA_APK: ${{ secrets.FIRMA_APK }}
+        run: |
+          if [ -z "$FIRMA_APK" ]; then
+            echo "::warning::Falta el secreto FIRMA_APK: la app se firma con una clave al azar"
+            exit 0
+          fi
+          for d in "$HOME/.android" "${ANDROID_USER_HOME:-}"; do
+            [ -n "$d" ] || continue
+            mkdir -p "$d"
+            echo "$FIRMA_APK" | base64 -d > "$d/debug.keystore"
+          done
+
       - name: Generar proyecto Android
         working-directory: apps/${{ matrix.app }}
         run: flutter create --org com.wrctech --project-name ${{ matrix.app }} --platforms android .
@@ -65,6 +80,8 @@ jobs:
           flutter build apk --release
           mkdir -p ../../salida
           cp build/app/outputs/flutter-apk/app-release.apk ../../salida/wrctech-${{ matrix.app }}.apk
+          firmador=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)apksigner
+          "$firmador" verify --print-certs ../../salida/wrctech-${{ matrix.app }}.apk | grep SHA-256
 
       - uses: actions/upload-artifact@v4
         with:
